@@ -107,6 +107,61 @@
         },
         "status": 200
       }
+    },
+    {
+      "description": "Request to fetch resource by using ID generated on provider side",
+      "providerStates": [
+        {
+          "name": "resource with auto-generated ID exists"
+        }
+      ],
+      "request": {
+        "headers": {
+          "Authorization": "Basic dXNlcjpwYXNz"
+        },
+        "generators": {
+          "path": {
+            "dataType": "STRING",
+            "expression": "/resource/${resourceId}",
+            "type": "ProviderState"
+          }
+        },
+        "method": "GET",
+        "path": "/resource/testID"
+      },
+      "response": {
+        "body": {
+          "id": "testID",
+          "value": 123
+        },
+        "generators": {
+          "body": {
+            "$.id": {
+              "dataType": "STRING",
+              "expression": "${resourceId}",
+              "type": "ProviderState"
+            },
+            "$.value": {
+              "max": 2147483647,
+              "min": 0,
+              "type": "RandomInt"
+            }
+          }
+        },
+        "matchingRules": {
+          "body": {
+            "$": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      }
     }
   ],
   "metadata": {

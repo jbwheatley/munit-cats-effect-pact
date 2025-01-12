@@ -125,6 +125,11 @@ final class ProviderInfoBuilder private (
     withStateChangeUrl(s"$protocol://$host:$port$endpointWithLeadingSlash")
   }
 
+  def withStateChangeFunctionAndResponse(
+      stateChange: PartialFunction[ProviderState, Map[String, String]]
+  ): ProviderInfoBuilder =
+    withStateManagementFunction(StateManagementFunction.withResponse(stateChange))
+
   def withStateChangeFunction(stateChange: PartialFunction[ProviderState, Unit]): ProviderInfoBuilder =
     withStateManagementFunction(StateManagementFunction(stateChange))
   def withStateChangeFunction(stateChange: ProviderState => Unit): ProviderInfoBuilder =

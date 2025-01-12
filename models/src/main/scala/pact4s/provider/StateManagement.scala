@@ -23,7 +23,7 @@ object StateManagement {
   final case class ProviderUrl(private[pact4s] val url: String) extends StateManagement
 
   final class StateManagementFunction private (
-      private[pact4s] val stateChangeFunc: PartialFunction[ProviderState, Unit],
+      private[pact4s] val stateChangeFunc: PartialFunction[ProviderState, Map[String, String]],
       private[pact4s] val stateChangeBeforeHook: () => Unit,
       private[pact4s] val host: String,
       private[pact4s] val port: Int,
@@ -53,6 +53,11 @@ object StateManagement {
 
     def apply(
         stateChangeFunc: PartialFunction[ProviderState, Unit]
+    ): StateManagementFunction =
+      withResponse(stateChangeFunc.andThen(_ => Map.empty))
+
+    def withResponse(
+        stateChangeFunc: PartialFunction[ProviderState, Map[String, String]]
     ): StateManagementFunction =
       new StateManagementFunction(stateChangeFunc, () => (), "localhost", 0, "/pact4s-state-change")
 
